@@ -364,10 +364,16 @@ public class SalesforceDroidGapActivity extends CordovaActivity implements Sales
                                      * The client instance being used here needs to be
                                      * refreshed, to ensure we use the new access token.
                                      */
-                                    SalesforceDroidGapActivity.this.client = SalesforceDroidGapActivity.this.clientManager.peekRestClient();
-                                    setSidCookies();
-                                    loadVFPingPage();
-                                    getAuthCredentials(callbackContext);
+
+                                    try {
+                                        SalesforceDroidGapActivity.this.client = SalesforceDroidGapActivity.this.clientManager.peekRestClient();
+                                        setSidCookies();
+                                        loadVFPingPage();
+                                        getAuthCredentials(callbackContext);
+
+                                    } catch (AccountInfoNotFoundException e) {
+                                        SalesforceHybridLogger.i(TAG, "authenticate - onSuccess - " + e.getLocalizedMessage());
+                                    }
                                 }
                             });
                         }
@@ -441,11 +447,17 @@ public class SalesforceDroidGapActivity extends CordovaActivity implements Sales
                          * The client instance being used here needs to be
                          * refreshed, to ensure we use the new access token.
                          */
-                        SalesforceDroidGapActivity.this.client = SalesforceDroidGapActivity.this.clientManager.peekRestClient();
-                        setSidCookies();
-                        loadVFPingPage();
-                        final String frontDoorUrl = getFrontDoorUrl(url, BootConfig.isAbsoluteUrl(url));
-                        loadUrl(frontDoorUrl);
+
+                        try {
+                            SalesforceDroidGapActivity.this.client = SalesforceDroidGapActivity.this.clientManager.peekRestClient();
+                            setSidCookies();
+                            loadVFPingPage();
+                            final String frontDoorUrl = getFrontDoorUrl(url, BootConfig.isAbsoluteUrl(url));
+                            loadUrl(frontDoorUrl);
+
+                        } catch (AccountInfoNotFoundException e) {
+                            SalesforceHybridLogger.i(TAG, "authenticate - onSuccess - " + e.getLocalizedMessage());
+                        }
                     }
                 });
             }
